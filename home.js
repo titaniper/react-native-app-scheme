@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform, Text, Linking, View, SafeAreaView } from 'react-native';
 
+
 class Home extends React.Component<{}, { text: string }> {
 state = {
   text: "Look, I'm safe! Not under a status bar or notch or home indicator or anything! Very cool"
@@ -12,20 +13,32 @@ static navigationOptions = {
 
 componentDidMount() { 
   console.log(`componentDidMount`);
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-          console.log(`[android] on open url: ${url}`);
-        this.navigate(url);
-      });
-    } else {
-      Linking.addEventListener('url', this.handleOpenURL);
-    }
 
-    setTimeout(()=> {
-      this.setState({
-        text: `handle open url`
-      });
-    }, 2000);
+  Linking.getInitialURL().then(url => {
+    console.log(`[getInitialURL] on open url: ${url}`);
+    this.navigate(url);
+  });
+
+  Linking.addEventListener('url', this.handleOpenURL);
+
+    // if (Platform.OS === 'android') {
+    //   Linking.getInitialURL().then(url => {
+    //       console.log(`[android] on open url: ${url}`);
+    //     this.navigate(url);
+    //   });
+    // } else {
+    //   Linking.getInitialURL().then(url => {
+    //     console.log(`[ios] on open url: ${url}`);
+    //   this.navigate(url);
+    // });
+    //   Linking.addEventListener('url', this.handleOpenURL);
+    // }
+
+    // setTimeout(()=> {
+    //   this.setState({
+    //     text: `handle open url`
+    //   });
+    // }, 2000);
   }
   
   componentWillUnmount() { 
@@ -35,13 +48,13 @@ componentDidMount() {
   handleOpenURL = (event) => { 
     console.log(`handle open url: ${event.url}`);
 
-    this.setState({
-      text: `handle open url: ${event.url}`
-    });
     this.navigate(event.url);
   }
   
   navigate = (url) => { // E
+    this.setState({
+      text: `handle open url: ${url}`
+    });
     const { navigate } = this.props.navigation;
     // const route = url.replace(/.*?:\/\//g, '');
     // const id = route.match(/\/([^\/]+)\/?$/)[1];
@@ -51,6 +64,7 @@ componentDidMount() {
     //   navigate('Dumster', { id, name: 'chris' })
     // };
   }
+
   render() {
     return (
       <Text>

@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "clean": "watchman watch-del-all && rm -rf node_modules && npm install && rm -rf /tmp/haste-map-react-native-packager-* && npm start -- --reset-cache ",
+    "set-adb": "adb reconnect && adb reverse tcp:8081 tcp:8081",
+    "android-debug": "sudo react-native run-android",
+    "android-release": "sudo react-native run-android --variant=release",
+    "android-build:apk:stage-debug": "cd android && ./gradlew assembleStageDebug -PbundleInDebug=true -PdevDisabledInDebug=true",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
