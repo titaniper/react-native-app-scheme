@@ -11,6 +11,9 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+// iOS 9.x or newer
+#import <React/RCTLinkingManager.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -38,5 +41,23 @@
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
 }
+
+
+- (BOOL)application:(UIApplication *)application
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
+}
+
+//// 이것에 대해 한번 알아보자.
+//// Only if your app is using [Universal Links](https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/AppSearch/UniversalLinks.html).
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+// restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+//{
+// return [RCTLinkingManager application:application
+//                  continueUserActivity:userActivity
+//                    restorationHandler:restorationHandler];
+//}
 
 @end
