@@ -1,77 +1,36 @@
-import React from 'react';
-import { Platform, Text, Linking, View, SafeAreaView } from 'react-native';
+import * as React from 'react';
+import { Text, Linking } from 'react-native';
 
+const { useState, useEffect } = React;
 
-class Home extends React.Component<{}, { text: string }> {
-state = {
-  text: "Look, I'm safe! Not under a status bar or notch or home indicator or anything! Very cool"
-};
+const useOpenURL = () => {
+  const [url, setURL] = useState('dd');
 
-static navigationOptions = {
-    title: 'Home',
-};
+  const handleOpenURL = (event) => {
+    setURL(event.url);
+  };
 
-componentDidMount() { 
-  console.log(`componentDidMount`);
-
-  Linking.getInitialURL().then(url => {
-    console.log(`[getInitialURL] on open url: ${url}`);
-    this.navigate(url);
-  });
-
-  Linking.addEventListener('url', this.handleOpenURL);
-
-    // if (Platform.OS === 'android') {
-    //   Linking.getInitialURL().then(url => {
-    //       console.log(`[android] on open url: ${url}`);
-    //     this.navigate(url);
-    //   });
-    // } else {
-    //   Linking.getInitialURL().then(url => {
-    //     console.log(`[ios] on open url: ${url}`);
-    //   this.navigate(url);
-    // });
-    //   Linking.addEventListener('url', this.handleOpenURL);
-    // }
-
-    // setTimeout(()=> {
-    //   this.setState({
-    //     text: `handle open url`
-    //   });
-    // }, 2000);
-  }
-  
-  componentWillUnmount() { 
-    Linking.removeEventListener('url', this.handleOpenURL);
-  }
-
-  handleOpenURL = (event) => { 
-    console.log(`handle open url: ${event.url}`);
-
-    this.navigate(event.url);
-  }
-  
-  navigate = (url) => { // E
-    this.setState({
-      text: `handle open url: ${url}`
+  useEffect(() => {
+    Linking.getInitialURL().then(url => {
+      setURL(url);
     });
-    const { navigate } = this.props.navigation;
-    // const route = url.replace(/.*?:\/\//g, '');
-    // const id = route.match(/\/([^\/]+)\/?$/)[1];
-    // const routeName = route.split('/')[0];
-  
-    // if (routeName === 'dumpster') {
-    //   navigate('Dumster', { id, name: 'chris' })
-    // };
-  }
 
-  render() {
-    return (
+    Linking.addEventListener('url', handleOpenURL);
+
+    return () => Linking.removeEventListener('url', handleOpenURL);
+  }, []);
+
+  return url;
+};
+
+const Home = () => {
+  const url = useOpenURL();
+
+  return (
       <Text>
-      {this.state.text}
-    </Text>
-    );
-  }
-}
+        {`open url: ${url}`}
+      </Text>
+  );
+};
 
 export default Home;
